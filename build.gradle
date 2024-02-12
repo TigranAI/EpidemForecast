@@ -1,0 +1,33 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+	id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+}
+
+group = 'ru.tigran'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '21'
+}
+
+repositories {
+	mavenCentral()
+	maven { url "https://jade.tilab.com/maven/" }
+}
+
+dependencies {
+	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'com.tilab.jade:jade:4.6.0'
+}
+
+tasks.withType(KotlinCompile) {
+	kotlinOptions {
+		freeCompilerArgs += '-Xjsr305=strict'
+		jvmTarget = '21'
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
