@@ -28,7 +28,7 @@ class Susceptible : BaseAgent() {
     }
 
     fun getInfected() {
-        Infected.create(name.substring(4), containerController)
+        Infected.create(aid.localName.substring(4), containerController)
         doDelete()
     }
 

@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  epidem-forecast:
+    build: build/docker
+    ports:
+      - "7778:7778"
+      - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

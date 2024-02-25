@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+	id 'com.bmuschko.docker-java-application' version '9.4.0'
 }
 
 group = 'ru.tigran'
-version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '21'
@@ -19,6 +19,9 @@ repositories {
 dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	implementation 'com.tilab.jade:jade:4.6.0'
+	implementation 'xerces:xercesImpl:2.12.2'
+
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
 }
 
 tasks.withType(KotlinCompile) {
@@ -30,4 +33,31 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// Docker configuration
+
+tasks.register('dockerStartContainer') {
+	group 'docker'
+	description 'Создает Dockerfile, образ и запускает контейнер'
+	dependsOn dockerCreateDockerfile
+	doLast {
+		exec {
+			commandLine 'cmd', '/c', 'docker compose up --build --detach'
+		}
+	}
+}
+
+docker {
+	javaApplication {
+		baseImage = 'exoplatform/jdk:openjdk-21'
+		maintainer = 'Tigran Shaginyan "shaginyan-ts@yandex-team.ru"'
+		ports = [7778, 8080]
+		args = ['-mtpPort=7778', '-mtpHost=localhost', '-mainPort=8080', '-containerName=Docker']
+		jvmArgs = ['-Xms256m', '-Xmx2048m']
+	}
+}
+
+dockerCreateDockerfile {
+	environmentVariable 'ENV', 'DOCKER'
 }

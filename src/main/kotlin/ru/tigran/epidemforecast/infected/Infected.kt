@@ -22,7 +22,7 @@ class Infected : BaseAgent() {
     }
 
     fun doRecovery() {
-        Recovered.create(name.substring(4), containerController)
+        Recovered.create(aid.localName.substring(4), containerController)
         doDelete()
     }
 
