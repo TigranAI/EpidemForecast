@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:9.4.0'
+    }
+}
+
+apply plugin: "com.bmuschko.docker-java-application"
+
+tasks.register('dockerStartContainer') {
+    group 'docker'
+    description 'Создает Dockerfile, образ и запускает контейнер'
+    dependsOn dockerCreateDockerfile
+    doLast {
+        exec {
+            commandLine 'cmd', '/c', 'docker compose up --build --detach'
+        }
+    }
+}
+
+docker {
+    javaApplication {
+        baseImage = 'exoplatform/jdk:openjdk-21'
+        maintainer = 'Tigran Shaginyan "shaginyan-ts@yandex-team.ru"'
+        ports = [7778, 8080]
+        args = ['-mtpPort=7778', '-mtpHost=localhost', '-mainPort=8080', '-containerName=Docker']
+        jvmArgs = ['-Xms256m', '-Xmx2048m']
+    }
+}
+
+dockerCreateDockerfile {
+    environmentVariable 'ENV', 'DOCKER'
+}
