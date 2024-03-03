@@ -1,7 +1,6 @@
 package ru.tigran.epidemforecast.susceptible
 
 import ru.tigran.epidemforecast.base.behaviour.LoopBehaviour
-import java.util.logging.Level
 import java.util.logging.Logger
 
 class BreatheBehaviour(
@@ -11,7 +10,6 @@ class BreatheBehaviour(
 
     override fun doAction() {
         agent.receive()?.apply {
-            logger.log(Level.INFO, "Breathe behavior received message ${agent.aid.name}")
             agent.getInfected()
         }
     }

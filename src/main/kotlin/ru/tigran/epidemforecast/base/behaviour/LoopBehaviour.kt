@@ -6,8 +6,8 @@ import jade.core.behaviours.SimpleBehaviour
 abstract class LoopBehaviour(
     agent: Agent,
     private val delayMs: Long,
-    private var skipStart: Boolean = true
 ) : SimpleBehaviour(agent) {
+    private var skipStart: Boolean = true
 
     abstract fun doAction()
 

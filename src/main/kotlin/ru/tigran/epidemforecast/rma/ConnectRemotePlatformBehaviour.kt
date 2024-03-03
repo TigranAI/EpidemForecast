@@ -1,28 +1,25 @@
 package ru.tigran.epidemforecast.rma
 
 import jade.core.AID
-import jade.core.behaviours.Behaviour
 import jade.domain.FIPAAgentManagement.APDescription
 import jade.domain.FIPAAgentManagement.APService
+import jade.tools.rma.rma
+import ru.tigran.epidemforecast.base.behaviour.LoopBehaviour
 
 class ConnectRemotePlatformBehaviour(
-    private val agent: RMA,
+    private val agent: rma,
     private val platformName: String = "Docker:8080/JADE",
     private val platformHosts: Array<String> = arrayOf(
         "http://host.docker.internal:7778/acc",
         "http://localhost:7778/acc",
     ),
-) : Behaviour(agent) {
+) : LoopBehaviour(agent, 10000) {
     private var connected: Boolean = false
 
-    override fun action() {
-        if (!connected) {
-            connect()
-            agent.refreshRemoteAgent(getPlatformDescription(), getPlatformAmsAID())
-        }
+    override fun doAction() {
+        if (!connected) connect()
+        agent.refreshRemoteAgent(getPlatformDescription(), getPlatformAmsAID())
     }
-
-    override fun done() = connected
 
     private fun connect() {
         agent.addRemotePlatform(getPlatformAmsAID())
